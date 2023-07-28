@@ -1,6 +1,6 @@
 # BeeProject2023
 
-                                        **Project Planning and Scope Definition Report**
+                                            **Project Planning and Scope Definition Report**
                                         
    *********************************************************************************************************************************
 
@@ -47,10 +47,11 @@ Agents will be trained to integrate information from vision and touch modalities
 
 In this project, the vision modality will involve RGB images captured by cameras placed within the Mujoco environment. The touch modality will be simulated tactile feedback from the robotic arms interacting with objects.
 
+ *********************************************************************************************************************************
+
+
 **Metrics and Evaluation Criteria**
 
-
-   *********************************************************************************************************************************
 
 To measure the success of the RL environment and representation learning, we will use the following metrics and evaluation criteria:
 
