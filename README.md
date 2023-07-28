@@ -1,13 +1,17 @@
 # BeeProject2023
 
 ##Project Planning and Scope Definition Report
+
 ##Research Objectives and Goals
+
 The primary objective of this project is to develop and implement a crossmodal representation learning system using Reinforcement Learning (RL) agents within the Mujoco environment. The main goals are as follows:
 
 a) Crossmodal Representation Learning
+
 Create a system that allows RL agents to learn representations from both vision and touch modalities simultaneously.
 
 b) Multi-Modal RL Environment
+
 Design a Mujoco-based environment that supports both vision and touch inputs, providing the agents with the ability to perceive and interact with the world through these modalities.
 
 ##Specific Tasks for RL Agents
