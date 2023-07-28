@@ -54,9 +54,13 @@ Measure the speed of convergence and the number of episodes required for the age
 The estimated timeline for the project is as follows:
 
 Week 1: Environment setup and integration of vision and touch modalities.
+
 Week 2: Initial training of RL agents on simple tasks.
+
 Week 3: Refinement of RL algorithms and crossmodal representation learning.
+
 Week 4: Fine-tuning, evaluation, and performance analysis.
+
 Week 5: Report writing and documentation of the project.
 
 **Conclusion**
