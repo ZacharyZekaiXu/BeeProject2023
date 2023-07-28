@@ -9,8 +9,6 @@
 The primary objective of this project is to develop and implement a crossmodal representation learning system using Reinforcement Learning (RL) agents within the Mujoco environment. The main goals are as follows:
 
 
-   *********************************************************************************************************************************
-
 **a) Crossmodal Representation Learning**
 
 Create a system that allows RL agents to learn representations from both vision and touch modalities simultaneously.
