@@ -14,7 +14,8 @@ b) Multi-Modal RL Environment
 
 Design a Mujoco-based environment that supports both vision and touch inputs, providing the agents with the ability to perceive and interact with the world through these modalities.
 
-#Specific Tasks for RL Agents
+**Specific Tasks for RL Agents**
+
 The RL agents will be trained to perform various tasks in the Mujoco environment. Some of the specific tasks include:
 
 a) Object Manipulation
