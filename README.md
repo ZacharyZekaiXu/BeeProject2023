@@ -27,7 +27,7 @@ The RL agents will be trained to perform various tasks in the Mujoco environment
 
 **a) Object Manipulation**
 
-The agents will be trained to manipulate objects using robotic arms based on visual and tactile feedback.
+The agents will be trained to manipulate objects using Antbees on visual and tactile feedback.
 
 **b) Object Recognition**
 
