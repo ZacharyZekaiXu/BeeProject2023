@@ -1,0 +1,307 @@
+<mujoco model="quadruped">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.005"/>
+  <visual>
+    <quality shadowsize="2048"/>
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.8 0.8 0.8" specular="0.1 0.1 0.1" active="0"/>
+    <map znear="0.005" zfar="20"/>
+    <rgba rangefinder="1 1 0.1 0.1"/>
+  </visual>
+  <statistic meansize="0.192931" extent="34.4" center="0 0 0.07"/>
+  <default class="main">
+    <geom solref="0.01 1" solimp="0.9 0.99 0.003 0.5 2"/>
+    <general ctrllimited="true" dyntype="filter" biastype="affine" dynprm="0.1 0 0 0 0 0 0 0 0 0" gainprm="1000 0 0 0 0 0 0 0 0 0" biasprm="0 -1000 0 0 0 0 0 0 0 0"/>
+    <default class="body">
+      <joint limited="true" solimplimit="0 0.99 0.01 0.5 2" armature="0.01" damping="30"/>
+      <geom size="0.08 0 0" type="capsule" condim="1" density="500" material="self"/>
+      <default class="hip">
+        <default class="yaw">
+          <joint range="-50 50"/>
+        </default>
+        <default class="pitch">
+          <joint range="-20 60"/>
+        </default>
+      </default>
+      <default class="knee">
+        <joint range="-60 50"/>
+        <geom size="0.065 0 0"/>
+      </default>
+      <default class="ankle">
+        <joint range="-45 55"/>
+        <geom size="0.055 0 0"/>
+      </default>
+      <default class="toe">
+        <geom type="sphere" friction="1.5 0.005 0.0001" material="effector"/>
+        <site size="0.084 0.005 0.005" group="4" material="site"/>
+      </default>
+    </default>
+    <default class="rangefinder">
+      <site size="0.005 0.1 0.005" group="4" type="capsule" material="site"/>
+    </default>
+    <default class="wall">
+      <geom type="plane" material="decoration"/>
+    </default>
+    <default class="coupling">
+      <equality solref="0.005 0.5" solimp="0.95 0.99 0.01 0.5 2"/>
+    </default>
+    <default class="yaw_act">
+      <general ctrlrange="-1 1"/>
+    </default>
+    <default class="lift_act">
+      <general ctrlrange="-1 1.1"/>
+    </default>
+    <default class="extend_act">
+      <general ctrlrange="-0.8 0.8"/>
+    </default>
+  </default>
+  <asset>
+    <texture type="skybox" name="skybox" builtin="gradient" mark="random" rgb1="0.4 0.6 0.8" rgb2="0 0 0" markrgb="1 1 1" width="800" height="4800"/>
+    <texture type="2d" name="grid" builtin="checker" mark="edge" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" markrgb="0.2 0.3 0.4" width="300" height="300"/>
+    <texture type="cube" name="ball" builtin="checker" mark="cross" rgb1="0.1 0.1 0.1" rgb2="0.9 0.9 0.9" markrgb="1 1 1" width="151" height="906"/>
+    <material name="grid" texture="grid" texuniform="true" reflectance="0.2"/>
+    <material name="self" rgba="0.7 0.5 0.3 1"/>
+    <material name="self_default" rgba="0.7 0.5 0.3 1"/>
+    <material name="self_highlight" rgba="0 0.5 0.3 1"/>
+    <material name="effector" rgba="0.7 0.4 0.2 1"/>
+    <material name="effector_default" rgba="0.7 0.4 0.2 1"/>
+    <material name="effector_highlight" rgba="0 0.5 0.3 1"/>
+    <material name="decoration" rgba="0.3 0.5 0.7 1"/>
+    <material name="eye" rgba="0 0.2 1 1"/>
+    <material name="target" rgba="0.6 0.3 0.3 1"/>
+    <material name="target_default" rgba="0.6 0.3 0.3 1"/>
+    <material name="target_highlight" rgba="0.6 0.3 0.3 0.4"/>
+    <material name="site" rgba="0.5 0.5 0.5 0.3"/>
+    <material name="ball" texture="ball"/>
+    <hfield name="terrain" size="30 30 5 0.1" nrow="201" ncol="201"/>
+  </asset>
+  <worldbody>
+    <geom name="floor" size="15 15 0.5" type="plane" material="grid"/>
+    <geom name="wall_px" class="wall" size="1 15 0.5" pos="-15.7 0 0.7" quat="0.92388 0 0.382683 0"/>
+    <geom name="wall_py" class="wall" size="15 1 0.5" pos="0 -15.7 0.7" quat="0.92388 -0.382683 0 0"/>
+    <geom name="wall_nx" class="wall" size="1 15 0.5" pos="15.7 0 0.7" quat="0.92388 0 -0.382683 0"/>
+    <geom name="wall_ny" class="wall" size="15 1 0.5" pos="0 15.7 0.7" quat="0.92388 0.382683 0 0"/>
+    <geom name="terrain" pos="0 0 -0.01" type="hfield" rgba="0.2 0.3 0.4 1" hfield="terrain"/>
+    <site name="target" pos="1.5 -1.5 0.1" size="0.4 0.06" type="cylinder" material="target"/>
+    <camera name="global" pos="-10 10 10" quat="-0.339851 -0.17592 0.424708 0.820473" mode="trackcom"/>
+    <body name="torso" childclass="body" pos="0 0 0.57">
+      <joint name="root" limited="false" type="free" solimplimit="0.9 0.95 0.001 0.5 2" armature="0" damping="0"/>
+      <geom name="eye_r" size="0.05 0.106888" pos="0.205 -0.07 0.1" quat="0.770426 0 -0.63753 0" type="cylinder" mass="0"/>
+      <geom name="eye_l" size="0.05 0.106888" pos="0.205 0.07 0.1" quat="0.770426 0 -0.63753 0" type="cylinder" mass="0"/>
+      <geom name="torso" size="0.3 0.27 0.2" type="ellipsoid" density="1000"/>
+      <site name="pupil_r" pos="0.3 -0.07 0.08" quat="0.707107 0 0.707107 0" size="0.033" material="eye"/>
+      <site name="pupil_l" pos="0.3 0.07 0.08" quat="0.707107 0 0.707107 0" size="0.033" material="eye"/>
+      <site name="workspace" pos="0.8 0 -0.2" size="0.3" group="3" material="site"/>
+      <site name="rf_00" class="rangefinder" pos="0.375 -0.01 0.1125" quat="0.682452 0.200802 0.702807 0" size="0.005 0.0364863"/>
+      <site name="rf_01" class="rangefinder" pos="0.375 -0.005 0.1125" quat="0.681713 0.103467 0.724266 0" size="0.005 0.0354436"/>
+      <site name="rf_02" class="rangefinder" pos="0.375 0 0.1125" quat="0.681452 0 0.731863 0" size="0.005 0.0350892"/>
+      <site name="rf_03" class="rangefinder" pos="0.375 0.005 0.1125" quat="0.681713 -0.103467 0.724266 0" size="0.005 0.0354436"/>
+      <site name="rf_04" class="rangefinder" pos="0.375 0.01 0.1125" quat="0.682452 -0.200802 0.702807 0" size="0.005 0.0364863"/>
+      <site name="rf_10" class="rangefinder" pos="0.385 -0.01 0.105" quat="0.639307 0.285582 0.713954 0" size="0.005 0.0273861"/>
+      <site name="rf_11" class="rangefinder" pos="0.385 -0.01 0.105" quat="0.639307 0.285582 0.713954 0" size="0.005 0.0273861"/>
+      <site name="rf_12" class="rangefinder" pos="0.385 0 0.105" quat="0.633989 0 0.773342 0" size="0.005 0.0254951"/>
+      <site name="rf_13" class="rangefinder" pos="0.385 0.005 0.105" quat="0.635433 -0.151432 0.757161 0" size="0.005 0.0259808"/>
+      <site name="rf_14" class="rangefinder" pos="0.385 0.01 0.105" quat="0.639307 -0.285582 0.713954 0" size="0.005 0.0273861"/>
+      <site name="rf_20" class="rangefinder" pos="0.395 -0.01 0.0975" quat="0.554928 0.461454 0.692181 0" size="0.005 0.0195256"/>
+      <site name="rf_21" class="rangefinder" pos="0.395 -0.005 0.0975" quat="0.534522 0.267261 0.801784 0" size="0.005 0.0175"/>
+      <site name="rf_22" class="rangefinder" pos="0.395 0 0.0975" quat="0.525731 0 0.850651 0" size="0.005 0.0167705"/>
+      <site name="rf_23" class="rangefinder" pos="0.395 0.005 0.0975" quat="0.534522 -0.267261 0.801784 0" size="0.005 0.0175"/>
+      <site name="rf_24" class="rangefinder" pos="0.395 0.01 0.0975" quat="0.554928 -0.461454 0.692181 0" size="0.005 0.0195256"/>
+      <site name="rf_30" class="rangefinder" pos="0.405 -0.01 0.09" quat="0.408248 0.816497 0.408248 0" size="0.005 0.015"/>
+      <site name="rf_31" class="rangefinder" pos="0.405 -0.005 0.09" quat="0.302905 0.673887 0.673887 0" size="0.005 0.0122474"/>
+      <site name="rf_32" class="rangefinder" pos="0.405 0 0.09" quat="0.229753 0 0.973249 0" size="0.005 0.0111803"/>
+      <site name="rf_33" class="rangefinder" pos="0.405 0.005 0.09" quat="0.302905 -0.673887 0.673887 0" size="0.005 0.0122474"/>
+      <site name="rf_34" class="rangefinder" pos="0.405 0.01 0.09" quat="0.408248 -0.816497 0.408248 0" size="0.005 0.015"/>
+      <site name="torso_touch" pos="0 0 0" size="0.26 0.26 0.26" type="box" rgba="0 0 1 0"/>
+      <site name="torso" pos="0 0 0" size="0.05" rgba="1 0 0 1"/>
+      <camera name="x" pos="-1.7 0 1" quat="0.632456 0.316228 -0.316228 -0.632456" mode="trackcom"/>
+      <camera name="y" pos="0 4 2" quat="0 0 0.525731 0.850651" mode="trackcom"/>
+      <camera name="egocentric" pos="0.3 0 0.11" quat="0.585532 0.396424 -0.396424 -0.585532" fovy="60"/>
+      <light name="light" pos="0 0 4" dir="0 0 -1" mode="trackcom"/>
+      <body name="hip_front_left" childclass="hip" pos="0.2 0.2 0" quat="0.92388 0 0 0.382683">
+        <joint name="yaw_front_left" class="yaw" pos="0 0 0" axis="0 0 1" range="-0.872665 0.872665"/>
+        <joint name="pitch_front_left" class="pitch" pos="0 0 0" axis="0 1 0" range="-0.349066 1.0472"/>
+        <geom name="thigh_front_left" size="0.08 0.159765" pos="0.15 0 0.055" quat="0.572602 0 -0.819834 0"/>
+        <body name="knee_front_left" childclass="knee" pos="0.3 0 0.11">
+          <joint name="knee_front_left" pos="0 0 0" axis="0 1 0" range="-1.0472 0.872665"/>
+          <geom name="shin_front_left" size="0.065 0.176777" pos="0.125 0 -0.125" quat="0.92388 0 -0.382683 0"/>
+          <body name="ankle_front_left" childclass="ankle" pos="0.25 0 -0.25">
+            <joint name="ankle_front_left" pos="0 0 0" axis="0 1 0" range="-0.785398 0.959931"/>
+            <geom name="foot_front_left" size="0.055 0.125" pos="0 0 -0.125"/>
+            <body name="toe_front_left" childclass="toe" pos="0 0 -0.3">
+              <geom name="toe_front_left"/>
+              <site name="toe_front_left" pos="0 0 0"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="hip_front_right" childclass="hip" pos="0.2 -0.2 0" quat="0.92388 0 0 -0.382683">
+        <joint name="yaw_front_right" class="yaw" pos="0 0 0" axis="0 0 1" range="-0.872665 0.872665"/>
+        <joint name="pitch_front_right" class="pitch" pos="0 0 0" axis="0 1 0" range="-0.349066 1.0472"/>
+        <geom name="thigh_front_right" size="0.08 0.159765" pos="0.15 0 0.055" quat="0.572602 0 -0.819834 0"/>
+        <body name="knee_front_right" childclass="knee" pos="0.3 0 0.11">
+          <joint name="knee_front_right" pos="0 0 0" axis="0 1 0" range="-1.0472 0.872665"/>
+          <geom name="shin_front_right" size="0.065 0.176777" pos="0.125 0 -0.125" quat="0.92388 0 -0.382683 0"/>
+          <body name="ankle_front_right" childclass="ankle" pos="0.25 0 -0.25">
+            <joint name="ankle_front_right" pos="0 0 0" axis="0 1 0" range="-0.785398 0.959931"/>
+            <geom name="foot_front_right" size="0.055 0.125" pos="0 0 -0.125"/>
+            <body name="toe_front_right" childclass="toe" pos="0 0 -0.3">
+              <geom name="toe_front_right"/>
+              <site name="toe_front_right" pos="0 0 0"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="hip_back_right" childclass="hip" pos="-0.2 -0.2 0" quat="0.382683 0 0 -0.92388">
+        <joint name="yaw_back_right" class="yaw" pos="0 0 0" axis="0 0 1" range="-0.872665 0.872665"/>
+        <joint name="pitch_back_right" class="pitch" pos="0 0 0" axis="0 1 0" range="-0.349066 1.0472"/>
+        <geom name="thigh_back_right" size="0.08 0.159765" pos="0.15 0 0.055" quat="0.572602 0 -0.819834 0"/>
+        <body name="knee_back_right" childclass="knee" pos="0.3 0 0.11">
+          <joint name="knee_back_right" pos="0 0 0" axis="0 1 0" range="-1.0472 0.872665"/>
+          <geom name="shin_back_right" size="0.065 0.176777" pos="0.125 0 -0.125" quat="0.92388 0 -0.382683 0"/>
+          <body name="ankle_back_right" childclass="ankle" pos="0.25 0 -0.25">
+            <joint name="ankle_back_right" pos="0 0 0" axis="0 1 0" range="-0.785398 0.959931"/>
+            <geom name="foot_back_right" size="0.055 0.125" pos="0 0 -0.125"/>
+            <body name="toe_back_right" childclass="toe" pos="0 0 -0.3">
+              <geom name="toe_back_right"/>
+              <site name="toe_back_right" pos="0 0 0"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="hip_back_left" childclass="hip" pos="-0.2 0.2 0" quat="0.382683 0 0 0.92388">
+        <joint name="yaw_back_left" class="yaw" pos="0 0 0" axis="0 0 1" range="-0.872665 0.872665"/>
+        <joint name="pitch_back_left" class="pitch" pos="0 0 0" axis="0 1 0" range="-0.349066 1.0472"/>
+        <geom name="thigh_back_left" size="0.08 0.159765" pos="0.15 0 0.055" quat="0.572602 0 -0.819834 0"/>
+        <body name="knee_back_left" childclass="knee" pos="0.3 0 0.11">
+          <joint name="knee_back_left" pos="0 0 0" axis="0 1 0" range="-1.0472 0.872665"/>
+          <geom name="shin_back_left" size="0.065 0.176777" pos="0.125 0 -0.125" quat="0.92388 0 -0.382683 0"/>
+          <body name="ankle_back_left" childclass="ankle" pos="0.25 0 -0.25">
+            <joint name="ankle_back_left" pos="0 0 0" axis="0 1 0" range="-0.785398 0.959931"/>
+            <geom name="foot_back_left" size="0.055 0.125" pos="0 0 -0.125"/>
+            <body name="toe_back_left" childclass="toe" pos="0 0 -0.3">
+              <geom name="toe_back_left"/>
+              <site name="toe_back_left" pos="0 0 0"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="ball" pos="0 0 3">
+      <joint name="ball_root" type="free"/>
+      <geom name="ball" size="0.15" condim="6" priority="1" friction="0.7 0.005 0.005" solref="-10000 -30" material="ball"/>
+      <light name="ball_light" pos="0 0 4" dir="0 0 -1" mode="trackcom"/>
+    </body>
+  </worldbody>
+  <equality>
+    <tendon name="coupling_front_left" class="coupling" tendon1="coupling_front_left" polycoef="0 1 0 0 0"/>
+    <tendon name="coupling_front_right" class="coupling" tendon1="coupling_front_right" polycoef="0 1 0 0 0"/>
+    <tendon name="coupling_back_right" class="coupling" tendon1="coupling_back_right" polycoef="0 1 0 0 0"/>
+    <tendon name="coupling_back_left" class="coupling" tendon1="coupling_back_left" polycoef="0 1 0 0 0"/>
+  </equality>
+  <tendon>
+    <fixed name="coupling_front_left">
+      <joint joint="pitch_front_left" coef="0.333"/>
+      <joint joint="knee_front_left" coef="0.333"/>
+      <joint joint="ankle_front_left" coef="0.333"/>
+    </fixed>
+    <fixed name="coupling_front_right">
+      <joint joint="pitch_front_right" coef="0.333"/>
+      <joint joint="knee_front_right" coef="0.333"/>
+      <joint joint="ankle_front_right" coef="0.333"/>
+    </fixed>
+    <fixed name="coupling_back_right">
+      <joint joint="pitch_back_right" coef="0.333"/>
+      <joint joint="knee_back_right" coef="0.333"/>
+      <joint joint="ankle_back_right" coef="0.333"/>
+    </fixed>
+    <fixed name="coupling_back_left">
+      <joint joint="pitch_back_left" coef="0.333"/>
+      <joint joint="knee_back_left" coef="0.333"/>
+      <joint joint="ankle_back_left" coef="0.333"/>
+    </fixed>
+    <fixed name="extend_front_left">
+      <joint joint="pitch_front_left" coef="0.25"/>
+      <joint joint="knee_front_left" coef="-0.5"/>
+      <joint joint="ankle_front_left" coef="0.25"/>
+    </fixed>
+    <fixed name="lift_front_left">
+      <joint joint="pitch_front_left" coef="0.5"/>
+      <joint joint="ankle_front_left" coef="-0.5"/>
+    </fixed>
+    <fixed name="extend_front_right">
+      <joint joint="pitch_front_right" coef="0.25"/>
+      <joint joint="knee_front_right" coef="-0.5"/>
+      <joint joint="ankle_front_right" coef="0.25"/>
+    </fixed>
+    <fixed name="lift_front_right">
+      <joint joint="pitch_front_right" coef="0.5"/>
+      <joint joint="ankle_front_right" coef="-0.5"/>
+    </fixed>
+    <fixed name="extend_back_right">
+      <joint joint="pitch_back_right" coef="0.25"/>
+      <joint joint="knee_back_right" coef="-0.5"/>
+      <joint joint="ankle_back_right" coef="0.25"/>
+    </fixed>
+    <fixed name="lift_back_right">
+      <joint joint="pitch_back_right" coef="0.5"/>
+      <joint joint="ankle_back_right" coef="-0.5"/>
+    </fixed>
+    <fixed name="extend_back_left">
+      <joint joint="pitch_back_left" coef="0.25"/>
+      <joint joint="knee_back_left" coef="-0.5"/>
+      <joint joint="ankle_back_left" coef="0.25"/>
+    </fixed>
+    <fixed name="lift_back_left">
+      <joint joint="pitch_back_left" coef="0.5"/>
+      <joint joint="ankle_back_left" coef="-0.5"/>
+    </fixed>
+  </tendon>
+  <actuator>
+    <general name="yaw_front_left" class="yaw_act" joint="yaw_front_left"/>
+    <general name="lift_front_left" class="lift_act" tendon="lift_front_left"/>
+    <general name="extend_front_left" class="extend_act" tendon="extend_front_left"/>
+    <general name="yaw_front_right" class="yaw_act" joint="yaw_front_right"/>
+    <general name="lift_front_right" class="lift_act" tendon="lift_front_right"/>
+    <general name="extend_front_right" class="extend_act" tendon="extend_front_right"/>
+    <general name="yaw_back_right" class="yaw_act" joint="yaw_back_right"/>
+    <general name="lift_back_right" class="lift_act" tendon="lift_back_right"/>
+    <general name="extend_back_right" class="extend_act" tendon="extend_back_right"/>
+    <general name="yaw_back_left" class="yaw_act" joint="yaw_back_left"/>
+    <general name="lift_back_left" class="lift_act" tendon="lift_back_left"/>
+    <general name="extend_back_left" class="extend_act" tendon="extend_back_left"/>
+  </actuator>
+  <sensor>
+    <accelerometer site="torso" name="imu_accel"/>
+    <gyro site="torso" name="imu_gyro"/>
+    <velocimeter site="torso" name="velocimeter"/>
+    <force site="toe_front_left" name="force_toe_front_left"/>
+    <force site="toe_front_right" name="force_toe_front_right"/>
+    <force site="toe_back_right" name="force_toe_back_right"/>
+    <force site="toe_back_left" name="force_toe_back_left"/>
+    <torque site="toe_front_left" name="torque_toe_front_left"/>
+    <torque site="toe_front_right" name="torque_toe_front_right"/>
+    <torque site="toe_back_right" name="torque_toe_back_right"/>
+    <torque site="toe_back_left" name="torque_toe_back_left"/>
+    <subtreecom body="torso" name="center_of_mass"/>
+    <rangefinder site="rf_00" name="rf_00"/>
+    <rangefinder site="rf_01" name="rf_01"/>
+    <rangefinder site="rf_02" name="rf_02"/>
+    <rangefinder site="rf_03" name="rf_03"/>
+    <rangefinder site="rf_04" name="rf_04"/>
+    <rangefinder site="rf_10" name="rf_10"/>
+    <rangefinder site="rf_11" name="rf_11"/>
+    <rangefinder site="rf_12" name="rf_12"/>
+    <rangefinder site="rf_13" name="rf_13"/>
+    <rangefinder site="rf_14" name="rf_14"/>
+    <rangefinder site="rf_20" name="rf_20"/>
+    <rangefinder site="rf_21" name="rf_21"/>
+    <rangefinder site="rf_22" name="rf_22"/>
+    <rangefinder site="rf_23" name="rf_23"/>
+    <rangefinder site="rf_24" name="rf_24"/>
+    <rangefinder site="rf_30" name="rf_30"/>
+    <rangefinder site="rf_31" name="rf_31"/>
+    <rangefinder site="rf_32" name="rf_32"/>
+    <rangefinder site="rf_33" name="rf_33"/>
+    <rangefinder site="rf_34" name="rf_34"/>
+  </sensor>
+</mujoco>
